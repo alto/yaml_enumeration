@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "maxitest", '~> 1'
+  spec.add_development_dependency "maxitest"
   spec.add_development_dependency "shoulda-context"
 
   spec.add_dependency "activesupport", '>= 6'
