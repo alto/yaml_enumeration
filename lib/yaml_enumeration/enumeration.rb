@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/class/attribute'
 
 module YamlEnumeration
   class Enumeration
-
     extend Association
 
     class_attribute :values
@@ -13,20 +14,18 @@ module YamlEnumeration
 
     def self.load_values(filename)
       file = File.join(Rails.root, 'db', 'enumerations', "#{filename}.yml")
-      YAML.load(ERB.new(File.read(file)).result).values.each do |data|
+      YAML.safe_load(ERB.new(File.read(file)).result).each_value do |data|
         value data.symbolize_keys
       end
     end
 
     def self.value(hash)
-      unless hash.key?(:id) && hash.key?(:type)
-        raise "invalid definition"
-      end
+      raise "invalid definition" unless hash.key?(:id) && hash.key?(:type)
 
       self.attributes ||= Set.new
       self.attributes += hash.keys
 
-      hash.keys.each do |attr|
+      hash.each_key do |attr|
         # defining getter method
         unless method_defined?(attr)
           define_method attr do
@@ -40,10 +39,10 @@ module YamlEnumeration
           end
         end
         # defining setter method
-        unless method_defined?("#{attr}=")
-          define_method "#{attr}=" do |v|
-            self.class.values[id][attr] = v
-          end
+        next if method_defined?("#{attr}=")
+
+        define_method "#{attr}=" do |v|
+          self.class.values[id][attr] = v
         end
       end
 
@@ -74,21 +73,22 @@ module YamlEnumeration
     class << self
       def all
         return [] unless values
+
         # values.keys.map {|id| new(id)} # override this if you do not want to keep associated obj loaded against
-        self.all_instances ||= values.keys.map {|id| new(id)}
+        self.all_instances ||= values.keys.map { |id| new(id) }
       end
 
       def find(id)
         case id
-          when Integer
-            all.detect {|a| a.id == id}
-          when NilClass
-            nil
-          else
-            all.detect {|a| a.type == id.to_s}
+        when Integer
+          all.detect { |a| a.id == id }
+        when NilClass
+          nil
+        else
+          all.detect { |a| a.type == id.to_s }
         end
       end
-      alias_method :find_by_id, :find
+      alias find_by_id find
 
       def find_by(column, value=nil)
         case column
@@ -96,9 +96,9 @@ module YamlEnumeration
           raise "Hashes with multiple filters are not support so far" if column.keys.size > 1
 
           key = column.keys[0]
-          all.find {|item| item.send(key) == column[key] }
+          all.find { |item| item.send(key) == column[key] }
         else
-          all.find {|item| item.send(column) == value }
+          all.find { |item| item.send(column) == value }
         end
       end
 
@@ -108,28 +108,28 @@ module YamlEnumeration
           raise "Hashes with multiple filters are not support so far" if column.keys.size > 1
 
           key = column.keys[0]
-          all.select {|item| item.send(key) == column[key] }
+          all.select { |item| item.send(key) == column[key] }
         else
-          all.select {|item| item.send(column) == value }
+          all.select { |item| item.send(column) == value }
         end
       end
 
       def find_by_type(type)
-        all.detect {|a| a.type == type.to_s}
+        all.detect { |a| a.type == type.to_s }
       end
 
       def where(matches)
         raise "Only the hash form of where is supported, not #{matches}" unless matches.is_a?(Hash)
 
         all.select do |item|
-          matches.all? {|k,v| item.send(k) == v }
+          matches.all? { |k, v| item.send(k) == v }
         end
       end
 
       # Define singleton methods .BLAH for each type
       def with_named_items(column = :type)
         all.each do |item|
-          define_singleton_method "#{item.send(column).upcase}" do
+          define_singleton_method item.send(column).upcase.to_s do
             find_by(column, item.send(column).downcase)
           end
         end
@@ -143,6 +143,5 @@ module YamlEnumeration
     def initialize(id)
       self.id = id
     end
-
   end # Enumeration
 end
