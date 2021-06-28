@@ -93,6 +93,13 @@ class YamlEnumeration::EnumerationTest < Minitest::Test
     end
   end
 
+  context 'find_all_by' do
+    should 'find a single item by a field' do
+      assert_equal [EnumerationExample.find(2)], EnumerationExample.find_all_by(:type, 'second')
+      assert_equal [EnumerationExample.find(2)], EnumerationExample.find_all_by(type: 'second')
+    end
+  end
+
   context 'where' do
     should 'find a single item by a field' do
       assert_equal [ EnumerationExample.find(2) ], EnumerationExample.where(type: 'second')

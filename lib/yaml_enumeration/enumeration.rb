@@ -102,6 +102,18 @@ module YamlEnumeration
         end
       end
 
+      def find_all_by(column, value=nil)
+        case column
+        when Hash
+          raise "Hashes with multiple filters are not support so far" if column.keys.size > 1
+
+          key = column.keys[0]
+          all.select {|item| item.send(key) == column[key] }
+        else
+          all.select {|item| item.send(column) == value }
+        end
+      end
+
       def find_by_type(type)
         all.detect {|a| a.type == type.to_s}
       end
