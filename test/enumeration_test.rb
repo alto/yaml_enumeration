@@ -84,11 +84,6 @@ module YamlEnumeration
         assert_equal EnumerationExample.find(2), EnumerationExample.find_by(type: 'second')
       end
 
-      should 'find a single item by a case insensitive field' do
-        assert_equal EnumerationExample.find(3), EnumerationExample.find_by(:name, 'third')
-        assert_equal EnumerationExample.find(3), EnumerationExample.find_by(name: 'third')
-      end
-
       should 'return nil for no match' do
         assert_nil EnumerationExample.find_by(:name, 'meh')
         assert_nil EnumerationExample.find_by(name: 'meh')
