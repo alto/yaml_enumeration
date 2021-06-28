@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "maxitest"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rubocop", '1.17.0'
+  spec.add_development_dependency "rubocop-performance", '1.11.3'
   spec.add_development_dependency "shoulda-context"
 
   spec.add_dependency "activesupport", '>= 6'
