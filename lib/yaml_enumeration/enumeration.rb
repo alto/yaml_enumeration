@@ -90,8 +90,16 @@ module YamlEnumeration
       end
       alias_method :find_by_id, :find
 
-      def find_by(column, value)
-        all.find {|item| item.send(column) == value }
+      def find_by(column, value=nil)
+        case column
+        when Hash
+          raise "Hashes with multiple filters are not support so far" if column.keys.size > 1
+
+          key = column.keys[0]
+          all.find {|item| item.send(key) == column[key] }
+        else
+          all.find {|item| item.send(column) == value }
+        end
       end
 
       def find_by_type(type)
