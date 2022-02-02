@@ -80,6 +80,36 @@ class User < ActiveRecord::Base
 end
 ```
 
+additional `yaml` syntax such as anchors can be removed from the enumeration by including `_exclude_from_enumeration`:
+
+```yaml
+# countries.yml
+---
+defaults_exclude_from_enumeration: &defaults
+  continent: Australia
+
+nz:
+  <<: *defaults
+  id: 1 # has to be provided
+  type: new_zealand # has to be provided
+  name: New Zealand
+  code: nz
+au:
+  <<: *defaults
+  id: 2
+  type: australia
+  name: Australia
+  code: au
+uk:
+  <<: *defaults
+  id: 3
+  type: united_kingdom
+  name: United Kingdom
+  code: uk
+  continent: Europe
+...
+```
+
 ## Accessing members
 
 If you include a call to class method `with_named_items` you will get an item defined for each typed entry in the enumeration, e.g. `Country.NEW_ZEALAND` and `Country.AUSTRALIA`.
