@@ -13,7 +13,7 @@ module YamlEnumeration
 
     def self.load_values(filename)
       file = File.join(Rails.root, 'db', 'enumerations', "#{filename}.yml")
-      YAML.load(ERB.new(File.read(file)).result).values.each do |data|
+      remove_exclusions(YAML.load(ERB.new(File.read(file)).result)).values.each do |data|
         value data.symbolize_keys
       end
     end
@@ -142,6 +142,11 @@ module YamlEnumeration
 
     def initialize(id)
       self.id = id
+    end
+
+    def remove_exclusions(result)
+      keys_to_remove = result.keys.select {|key| key =~ /.*_exclude_from_enumeration$/ }
+      result.except(*keys_to_remove)
     end
 
   end # Enumeration
