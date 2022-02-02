@@ -144,7 +144,7 @@ module YamlEnumeration
       self.id = id
     end
 
-    def remove_exclusions(result)
+    def self.remove_exclusions(result)
       keys_to_remove = result.keys.select {|key| key =~ /.*_exclude_from_enumeration$/ }
       result.except(*keys_to_remove)
     end
