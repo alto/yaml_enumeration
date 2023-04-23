@@ -128,9 +128,9 @@ module YamlEnumeration
 
       def yaml_load(source)
         begin
-          YAML.load(source, aliases: true)
+          YAML.load(source, aliases: true, permitted_classes: Configuration.permitted_classes)
         rescue ArgumentError
-          YAML.load(source)
+          YAML.load(source, permitted_classes: Configuration.permiitted_classes)
         end
       end
 
