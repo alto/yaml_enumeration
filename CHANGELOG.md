@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.4.0
+ * add support for Ruby `3.1` [#7](https://github.com/alto/yaml_enumeration/pull/7)
+
 ## 0.3.0
  * enable exclusion of blocks of YAML from the enumeration (support YAML anchors) [#6](https://github.com/alto/yaml_enumeration/pull/6)
 
