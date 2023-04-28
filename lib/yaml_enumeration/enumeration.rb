@@ -13,7 +13,7 @@ module YamlEnumeration
 
     def self.load_values(filename)
       file = File.join(Rails.root, 'db', 'enumerations', "#{filename}.yml")
-      remove_exclusions(YAML.load(ERB.new(File.read(file)).result)).values.each do |data|
+      remove_exclusions(yaml_load(ERB.new(File.read(file)).result)).values.each do |data|
         value data.symbolize_keys
       end
     end
@@ -123,6 +123,14 @@ module YamlEnumeration
 
         all.select do |item|
           matches.all? {|k,v| item.send(k) == v }
+        end
+      end
+
+      def yaml_load(source)
+        begin
+          YAML.load(source, aliases: true, permitted_classes: Configuration.permitted_classes)
+        rescue ArgumentError
+          YAML.load(source, permitted_classes: Configuration.permiitted_classes)
         end
       end
 
