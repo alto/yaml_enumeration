@@ -10,12 +10,30 @@ class YamlEnumeration::EnumerationTest < Minitest::Test
     with_named_items
   end
 
-  context "all enumerations" do
-    should "work" do
+  context "all" do
+    should "return all defined enumeration objects" do
       assert_equal 3, EnumerationExample.all.size
       assert EnumerationExample.all.include?(EnumerationExample.find(1))
       assert EnumerationExample.all.include?(EnumerationExample.find(2))
       assert EnumerationExample.all.include?(EnumerationExample.find(5))
+    end
+  end
+
+  context "count" do
+    should "return the number of all defined enumeration objects" do
+      assert_equal 3, EnumerationExample.count
+    end
+  end
+
+  context "first" do
+    should "return the first defined enumeration object" do
+      assert EnumerationExample.find(1), EnumerationExample.first
+    end
+  end
+
+  context "last" do
+    should "return the last defined enumeration object" do
+      assert EnumerationExample.find(1), EnumerationExample.last
     end
   end
 
