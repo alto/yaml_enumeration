@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.5.0
+ * introduce `count`, `first` and `last` methods [#8](https://github.com/alto/yaml_enumeration/pull/8)
+
 ## 0.4.0
  * add support for Ruby `3.1` [#7](https://github.com/alto/yaml_enumeration/pull/7)
 
