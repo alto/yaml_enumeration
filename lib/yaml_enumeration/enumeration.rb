@@ -78,6 +78,21 @@ module YamlEnumeration
         self.all_instances ||= values.keys.map {|id| new(id)}
       end
 
+      def count
+        return 0 unless values
+        all.size
+      end
+
+      def first
+        return nil unless values
+        all.first
+      end
+
+      def last
+        return nil unless values
+        all.last
+      end
+
       def find(id)
         case id
           when Integer
